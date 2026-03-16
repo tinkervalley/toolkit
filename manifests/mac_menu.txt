@@ -1,0 +1,6 @@
+# format=v1
+# Name|Key|Description
+Tools|tools|Useful developer and admin tools
+Software|software|Common app installs
+Cleanup|cleanup|System cleanup and updates
+Misc|misc|One-off utilities and helper scripts

@@ -1,0 +1,5 @@
+# format=v1
+# Name|Type|Target|Args|Confirm|Description
+Update Homebrew|RUN|brew update && brew upgrade||yes|Update installed Homebrew packages
+Cleanup Homebrew Cache|RUN|brew cleanup||yes|Remove stale downloads and old package versions
+Mac Cleanup Script|SH|https://example.com/scripts/mac-cleanup.sh||yes|Run your hosted cleanup shell script

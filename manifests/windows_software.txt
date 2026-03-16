@@ -1,0 +1,6 @@
+# format=v1
+# Name|Type|Target|Args|Confirm|Description
+Google Chrome|WINGET|Google.Chrome||no|Install Google Chrome
+Visual Studio Code|WINGET|Microsoft.VisualStudioCode||no|Install Visual Studio Code
+FileZilla|EXE|https://example.com/installers/filezilla-setup.exe|/S|no|Replace with your hosted EXE URL
+7-Zip|MSI|https://example.com/installers/7zip-x64.msi||no|Replace with your hosted MSI URL

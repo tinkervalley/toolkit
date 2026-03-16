@@ -1,0 +1,5 @@
+# format=v1
+# Name|Type|Target|Args|Confirm|Description
+Disk Cleanup|RUN|cleanmgr /verylowdisk|||Launch built-in Windows disk cleanup
+Clear Temp Files|RUN|Remove-Item -Path $env:TEMP\* -Recurse -Force -ErrorAction SilentlyContinue||yes|Delete files from the current user's temp folder
+Debloat Script|PS1|https://example.com/scripts/windows-debloat.ps1||yes|Run your hosted PowerShell cleanup script

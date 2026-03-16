@@ -1,0 +1,6 @@
+# format=v1
+# Name|Type|Target|Args|Confirm|Description
+Git|WINGET|Git.Git||no|Install Git from winget
+PowerToys|WINGET|Microsoft.PowerToys||no|Install Microsoft PowerToys
+7-Zip|MSI|https://example.com/installers/7zip-x64.msi||no|Replace with your hosted MSI URL
+Firefox|EXE|https://example.com/installers/firefox-setup.exe|/S|no|Replace with your hosted EXE URL

@@ -1,0 +1,6 @@
+# format=v1
+# Name|Type|Target|Args|Confirm|Description
+Google Chrome|CASK|google-chrome||no|Install Google Chrome
+Firefox|CASK|firefox||no|Install Firefox
+FileZilla|CASK|filezilla||no|Install FileZilla
+Node.js|BREW|node||no|Install Node.js

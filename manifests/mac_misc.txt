@@ -1,0 +1,5 @@
+# format=v1
+# Name|Type|Target|Args|Confirm|Description
+Install Rectangle|CASK|rectangle||no|Install Rectangle window manager
+Printer Package|PKG|https://example.com/installers/printer-driver.pkg||yes|Replace with your hosted PKG URL
+Bootstrap Script|SH|https://example.com/scripts/mac-bootstrap-extra.sh||yes|Run your hosted shell script
