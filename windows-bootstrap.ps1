@@ -1,9 +1,19 @@
 param(
     [string]$ManifestBaseUrl = "https://raw.githubusercontent.com/tinkervalley/toolkit/main/manifests",
-    [string]$BrandName = "Tinker Valley Tools"
+    [string]$ScriptBaseUrl = "",
+    [string]$BrandName = "the Tinker Valley Toolkit"
 )
 
 $ErrorActionPreference = "Stop"
+
+if ([string]::IsNullOrWhiteSpace($ScriptBaseUrl)) {
+    if ($ManifestBaseUrl -match '^https?://') {
+        $ScriptBaseUrl = $ManifestBaseUrl -replace '/manifests/?$', '/scripts'
+    } else {
+        $manifestRoot = Split-Path -Path $ManifestBaseUrl -Parent
+        $ScriptBaseUrl = Join-Path $manifestRoot 'scripts'
+    }
+}
 
 function Get-ManifestLines {
     param(
@@ -23,6 +33,23 @@ function Get-ManifestLines {
     }
 
     return Get-Content -LiteralPath $path
+}
+
+function Resolve-ScriptTarget {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ScriptTarget
+    )
+
+    if ($ScriptTarget -match '^https?://') {
+        return $ScriptTarget
+    }
+
+    if ($ScriptBaseUrl -match '^https?://') {
+        return ($ScriptBaseUrl.TrimEnd('/') + "/" + $ScriptTarget.TrimStart('/'))
+    }
+
+    return Join-Path $ScriptBaseUrl $ScriptTarget
 }
 
 function Get-ManifestRecords {
@@ -184,6 +211,14 @@ function Invoke-ManifestAction {
         }
         'PS1' {
             Invoke-Expression ((Invoke-RestMethod -Uri $Item.Target -Method Get) | Out-String)
+        }
+        'SCRIPT' {
+            $scriptTarget = Resolve-ScriptTarget -ScriptTarget $Item.Target
+            if ($scriptTarget -match '^https?://') {
+                Invoke-Expression ((Invoke-RestMethod -Uri $scriptTarget -Method Get) | Out-String)
+            } else {
+                & powershell.exe -ExecutionPolicy Bypass -File $scriptTarget
+            }
         }
         default {
             throw "Unsupported action type: $($Item.Type)"

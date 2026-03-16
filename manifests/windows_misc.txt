@@ -2,3 +2,4 @@
 # Name|Type|Target|Args|Confirm|Description
 Refresh Winget Sources|RUN|winget source update|||Refresh winget package sources
 Install Homebrew for Windows|PS1|https://example.com/scripts/install-homebrew-windows.ps1||yes|Example remote PowerShell task
+Sample Toolkit Script|SCRIPT|windows/sample-tool.ps1||yes|Run a PowerShell script from the repo scripts folder
