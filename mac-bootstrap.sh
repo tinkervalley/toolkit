@@ -56,7 +56,8 @@ read_records_into_array() {
 }
 
 confirm_required() {
-  local value="${1,,}"
+  local value
+  value="$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')"
   [[ "$value" == "yes" || "$value" == "y" || "$value" == "true" || "$value" == "1" ]]
 }
 
@@ -92,7 +93,7 @@ run_action() {
   local target="$3"
   local args="$4"
 
-  case "${type^^}" in
+  case "$(printf '%s' "$type" | tr '[:lower:]' '[:upper:]')" in
     RUN)
       /bin/bash -lc "$target"
       ;;
@@ -165,7 +166,8 @@ show_item_menu() {
 
       if confirm_required "${confirm:-no}"; then
         prompt_input "Confirm '$name'? (y/N): " answer || return 1
-        [[ "${answer,,}" == "y" || "${answer,,}" == "yes" ]] || {
+        answer="$(printf '%s' "$answer" | tr '[:upper:]' '[:lower:]')"
+        [[ "$answer" == "y" || "$answer" == "yes" ]] || {
           echo "Action canceled."
           continue
         }
