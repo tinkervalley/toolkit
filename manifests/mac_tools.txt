@@ -1,6 +1,5 @@
 # format=v1
 # Name|Type|Target|Args|Confirm|Description
-Git|BREW|git||no|Install Git with Homebrew
-wget|BREW|wget||no|Install wget with Homebrew
-Visual Studio Code|CASK|visual-studio-code||no|Install Visual Studio Code
-Xcode Command Line Tools|RUN|xcode-select --install||yes|Prompt macOS to install CLI developer tools
+Install Homebrew|SH|https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh||yes|Install Homebrew using the official installer
+OnyX|CASK|onyx||no|Install OnyX with Homebrew
+Fix Slow SMB|SCRIPT|mac/fix-slow-smb.sh||yes|Apply common SMB performance tweaks for trusted networks

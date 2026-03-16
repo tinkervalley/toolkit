@@ -5,5 +5,3 @@ Microsoft Edge|CASK|microsoft-edge||no|Install Microsoft Edge
 Firefox|CASK|firefox||no|Install Firefox
 VLC media player|CASK|vlc||no|Install VLC media player
 Microsoft Office|PKG|https://go.microsoft.com/fwlink/p/?linkid=525133||yes|Download and install Microsoft Office for Mac
-FileZilla|CASK|filezilla||no|Install FileZilla
-Node.js|BREW|node||no|Install Node.js
