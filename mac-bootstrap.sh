@@ -17,11 +17,19 @@ if [[ -z "$SCRIPT_BASE_URL" ]]; then
   fi
 fi
 
+add_cache_buster() {
+  local url="$1"
+  local separator='?'
+
+  [[ "$url" == *\?* ]] && separator='&'
+  printf '%s%s_t=%s\n' "$url" "$separator" "$(date +%s)-$$"
+}
+
 get_manifest_lines() {
   local manifest_name="$1"
 
   if [[ "$MANIFEST_BASE_URL" =~ ^https?:// ]]; then
-    curl -fsSL "${MANIFEST_BASE_URL%/}/$manifest_name"
+    curl -fsSL "$(add_cache_buster "${MANIFEST_BASE_URL%/}/$manifest_name")"
   else
     local path="${MANIFEST_BASE_URL%/}/$manifest_name"
     [[ -f "$path" ]] || { echo "Manifest not found: $path" >&2; return 1; }
@@ -70,9 +78,9 @@ resolve_script_target() {
   local script_target="$1"
 
   if [[ "$script_target" =~ ^https?:// ]]; then
-    printf '%s\n' "$script_target"
+    add_cache_buster "$script_target"
   elif [[ "$SCRIPT_BASE_URL" =~ ^https?:// ]]; then
-    printf '%s/%s\n' "${SCRIPT_BASE_URL%/}" "${script_target#/}"
+    add_cache_buster "${SCRIPT_BASE_URL%/}/${script_target#/}"
   else
     printf '%s/%s\n' "${SCRIPT_BASE_URL%/}" "${script_target#/}"
   fi
@@ -99,11 +107,11 @@ run_action() {
     PKG)
       local pkg_file
       pkg_file="$(mktemp /tmp/tvt-pkg-XXXXXX.pkg)"
-      curl -fsSL "$target" -o "$pkg_file"
+      curl -fsSL "$(add_cache_buster "$target")" -o "$pkg_file"
       sudo installer -pkg "$pkg_file" -target /
       ;;
     SH)
-      curl -fsSL "$target" | /bin/sh
+      curl -fsSL "$(add_cache_buster "$target")" | /bin/sh
       ;;
     SCRIPT)
       local script_target

@@ -15,6 +15,16 @@ if ([string]::IsNullOrWhiteSpace($ScriptBaseUrl)) {
     }
 }
 
+function Add-CacheBuster {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Url
+    )
+
+    $separator = if ($Url.Contains('?')) { '&' } else { '?' }
+    return ($Url + $separator + "_t=" + [guid]::NewGuid().ToString('N'))
+}
+
 function Get-ManifestLines {
     param(
         [Parameter(Mandatory = $true)]
@@ -22,7 +32,7 @@ function Get-ManifestLines {
     )
 
     if ($ManifestBaseUrl -match '^https?://') {
-        $uri = ($ManifestBaseUrl.TrimEnd('/') + "/" + $ManifestName)
+        $uri = Add-CacheBuster -Url ($ManifestBaseUrl.TrimEnd('/') + "/" + $ManifestName)
         $content = Invoke-RestMethod -Uri $uri -Method Get
         return ($content -split "`r?`n")
     }
@@ -42,11 +52,11 @@ function Resolve-ScriptTarget {
     )
 
     if ($ScriptTarget -match '^https?://') {
-        return $ScriptTarget
+        return (Add-CacheBuster -Url $ScriptTarget)
     }
 
     if ($ScriptBaseUrl -match '^https?://') {
-        return ($ScriptBaseUrl.TrimEnd('/') + "/" + $ScriptTarget.TrimStart('/'))
+        return (Add-CacheBuster -Url ($ScriptBaseUrl.TrimEnd('/') + "/" + $ScriptTarget.TrimStart('/')))
     }
 
     return Join-Path $ScriptBaseUrl $ScriptTarget
@@ -167,7 +177,8 @@ function Download-File {
     )
 
     $target = Join-Path ([System.IO.Path]::GetTempPath()) ("tvt-" + [guid]::NewGuid().ToString() + $Extension)
-    Invoke-WebRequest -Uri $Url -OutFile $target
+    $downloadUrl = if ($Url -match '^https?://') { Add-CacheBuster -Url $Url } else { $Url }
+    Invoke-WebRequest -Uri $downloadUrl -OutFile $target
     return $target
 }
 
@@ -210,7 +221,8 @@ function Invoke-ManifestAction {
             Invoke-Expression $Item.Target
         }
         'PS1' {
-            Invoke-Expression ((Invoke-RestMethod -Uri $Item.Target -Method Get) | Out-String)
+            $scriptUrl = Add-CacheBuster -Url $Item.Target
+            Invoke-Expression ((Invoke-RestMethod -Uri $scriptUrl -Method Get) | Out-String)
         }
         'SCRIPT' {
             $scriptTarget = Resolve-ScriptTarget -ScriptTarget $Item.Target
