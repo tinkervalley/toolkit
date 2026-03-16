@@ -4,6 +4,7 @@ set -euo pipefail
 
 MANIFEST_BASE_URL="${1:-${MANIFEST_BASE_URL:-https://raw.githubusercontent.com/tinkervalley/toolkit/main/manifests}}"
 BRAND_NAME="${BRAND_NAME:-Tinker Valley Tools}"
+TTY_DEVICE="/dev/tty"
 
 get_manifest_lines() {
   local manifest_name="$1"
@@ -38,6 +39,20 @@ read_records_into_array() {
 confirm_required() {
   local value="${1,,}"
   [[ "$value" == "yes" || "$value" == "y" || "$value" == "true" || "$value" == "1" ]]
+}
+
+prompt_input() {
+  local prompt="$1"
+  local result_var="$2"
+  local value
+
+  if [[ ! -r "$TTY_DEVICE" ]]; then
+    echo "Interactive terminal input is unavailable." >&2
+    return 1
+  fi
+
+  read -r -p "$prompt" value < "$TTY_DEVICE"
+  printf -v "$result_var" '%s' "$value"
 }
 
 run_action() {
@@ -99,7 +114,7 @@ show_item_menu() {
     done
     echo "0. Back"
 
-    read -r -p "Choose an option: " choice
+    prompt_input "Choose an option: " choice || return 1
 
     if [[ "$choice" == "0" ]]; then
       return 0
@@ -109,7 +124,7 @@ show_item_menu() {
       IFS='|' read -r name type target args confirm description <<< "${lines[$((choice - 1))]}"
 
       if confirm_required "${confirm:-no}"; then
-        read -r -p "Confirm '$name'? (y/N): " answer
+        prompt_input "Confirm '$name'? (y/N): " answer || return 1
         [[ "${answer,,}" == "y" || "${answer,,}" == "yes" ]] || {
           echo "Action canceled."
           continue
@@ -122,7 +137,7 @@ show_item_menu() {
         echo "Failed: $name" >&2
       fi
 
-      read -r -p "Press Enter to continue" _
+      prompt_input "Press Enter to continue" _ || return 1
       continue
     fi
 
@@ -146,7 +161,7 @@ while true; do
   done
   echo "0. Exit"
 
-  read -r -p "Choose an option: " category_choice
+  prompt_input "Choose an option: " category_choice || exit 1
 
   if [[ "$category_choice" == "0" ]]; then
     exit 0
