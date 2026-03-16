@@ -3,8 +3,19 @@
 set -euo pipefail
 
 MANIFEST_BASE_URL="${1:-${MANIFEST_BASE_URL:-https://raw.githubusercontent.com/tinkervalley/toolkit/main/manifests}}"
-BRAND_NAME="${BRAND_NAME:-Tinker Valley Tools}"
+SCRIPT_BASE_URL="${SCRIPT_BASE_URL:-}"
+BRAND_NAME="${BRAND_NAME:-the Tinker Valley Toolkit}"
 TTY_DEVICE="/dev/tty"
+
+if [[ -z "$SCRIPT_BASE_URL" ]]; then
+  if [[ "$MANIFEST_BASE_URL" =~ ^https?:// ]]; then
+    SCRIPT_BASE_URL="${MANIFEST_BASE_URL%/}"
+    SCRIPT_BASE_URL="${SCRIPT_BASE_URL%/manifests}"
+    SCRIPT_BASE_URL="$SCRIPT_BASE_URL/scripts"
+  else
+    SCRIPT_BASE_URL="$(cd "${MANIFEST_BASE_URL%/}/.." && pwd)/scripts"
+  fi
+fi
 
 get_manifest_lines() {
   local manifest_name="$1"
@@ -26,14 +37,14 @@ load_records() {
 read_records_into_array() {
   local manifest_name="$1"
   local __resultvar="$2"
-  local lines=()
+  local loaded_lines=()
   local line
 
   while IFS= read -r line; do
-    lines+=("$line")
+    loaded_lines+=("$line")
   done < <(load_records "$manifest_name")
 
-  eval "$__resultvar"='("${lines[@]}")'
+  eval "$__resultvar"='("${loaded_lines[@]}")'
 }
 
 confirm_required() {
@@ -53,6 +64,18 @@ prompt_input() {
 
   read -r -p "$prompt" value < "$TTY_DEVICE"
   printf -v "$result_var" '%s' "$value"
+}
+
+resolve_script_target() {
+  local script_target="$1"
+
+  if [[ "$script_target" =~ ^https?:// ]]; then
+    printf '%s\n' "$script_target"
+  elif [[ "$SCRIPT_BASE_URL" =~ ^https?:// ]]; then
+    printf '%s/%s\n' "${SCRIPT_BASE_URL%/}" "${script_target#/}"
+  else
+    printf '%s/%s\n' "${SCRIPT_BASE_URL%/}" "${script_target#/}"
+  fi
 }
 
 run_action() {
@@ -81,6 +104,15 @@ run_action() {
       ;;
     SH)
       curl -fsSL "$target" | /bin/sh
+      ;;
+    SCRIPT)
+      local script_target
+      script_target="$(resolve_script_target "$target")"
+      if [[ "$script_target" =~ ^https?:// ]]; then
+        curl -fsSL "$script_target" | /bin/sh
+      else
+        /bin/sh "$script_target"
+      fi
       ;;
     *)
       echo "Unsupported action type: $type" >&2
