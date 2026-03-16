@@ -1,5 +1,5 @@
 param(
-    [string]$ManifestBaseUrl = "https://example.com/tinker-valley-tools/manifests",
+    [string]$ManifestBaseUrl = "https://raw.githubusercontent.com/tinkervalley/toolkit/main/manifests",
     [string]$BrandName = "Tinker Valley Tools"
 )
 

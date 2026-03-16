@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-MANIFEST_BASE_URL="${1:-${MANIFEST_BASE_URL:-https://example.com/tinker-valley-tools/manifests}}"
+MANIFEST_BASE_URL="${1:-${MANIFEST_BASE_URL:-https://raw.githubusercontent.com/tinkervalley/toolkit/main/manifests}}"
 BRAND_NAME="${BRAND_NAME:-Tinker Valley Tools}"
 
 get_manifest_lines() {
