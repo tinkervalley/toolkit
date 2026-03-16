@@ -2,4 +2,6 @@
 # Name|Type|Target|Args|Confirm|Description
 Update Homebrew|RUN|brew update && brew upgrade||yes|Update installed Homebrew packages
 Cleanup Homebrew Cache|RUN|brew cleanup||yes|Remove stale downloads and old package versions
+Install Mole|BREW|tw93/tap/mole||yes|Install the Mole cleanup toolkit from tw93
+Run Mole Cleanup|RUN|mo clean||yes|Run Mole's interactive cleanup flow after installation
 Mac Cleanup Script|SH|https://example.com/scripts/mac-cleanup.sh||yes|Run your hosted cleanup shell script

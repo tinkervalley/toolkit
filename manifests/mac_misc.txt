@@ -3,4 +3,3 @@
 Install Rectangle|CASK|rectangle||no|Install Rectangle window manager
 Printer Package|PKG|https://example.com/installers/printer-driver.pkg||yes|Replace with your hosted PKG URL
 Bootstrap Script|SH|https://example.com/scripts/mac-bootstrap-extra.sh||yes|Run your hosted shell script
-Sample Toolkit Script|SCRIPT|mac/sample-tool.sh||yes|Run a shell script from the repo scripts folder

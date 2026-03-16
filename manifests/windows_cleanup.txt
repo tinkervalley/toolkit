@@ -3,3 +3,6 @@
 Disk Cleanup|RUN|cleanmgr /verylowdisk|||Launch built-in Windows disk cleanup
 Clear Temp Files|RUN|Remove-Item -Path $env:TEMP\* -Recurse -Force -ErrorAction SilentlyContinue||yes|Delete files from the current user's temp folder
 Debloat Script|PS1|https://example.com/scripts/windows-debloat.ps1||yes|Run your hosted PowerShell cleanup script
+Chris Titus Tech WinUtil|PS1|https://christitus.com/win||yes|Run the WinUtil debloat and maintenance utility from Chris Titus Tech
+Raphire Win11Debloat|PS1|https://raw.githubusercontent.com/Raphire/Win11Debloat/master/Get.ps1||yes|Run Raphire's Win11Debloat launcher from GitHub
+WinScript|PS1|https://winscript.cc/irm||yes|Run the WinScript debloat, privacy, and installer utility
