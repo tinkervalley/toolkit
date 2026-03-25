@@ -4,4 +4,5 @@ Google Chrome|CASK|google-chrome||no|Install Google Chrome
 Microsoft Edge|CASK|microsoft-edge||no|Install Microsoft Edge
 Firefox|CASK|firefox||no|Install Firefox
 VLC media player|CASK|vlc||no|Install VLC media player
+Inkscape|CASK|inkscape||no|Install Inkscape
 Microsoft Office|PKG|https://go.microsoft.com/fwlink/p/?linkid=525133||yes|Download and install Microsoft Office for Mac
